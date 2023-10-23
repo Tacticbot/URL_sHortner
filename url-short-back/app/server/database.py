@@ -1,5 +1,6 @@
 from pymongo import  MongoClient
 from pymongo.server_api import ServerApi
+import motor 
 
 
 uri = 'mongodb+srv://imusa4918:PpmoPhourizZiyDr@cluster0.trkisj2.mongodb.net/?retryWrites=true&w=majority'
