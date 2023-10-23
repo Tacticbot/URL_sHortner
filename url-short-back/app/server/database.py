@@ -1,15 +1,17 @@
+from fastapi import FastAPI
 from pymongo import  MongoClient
 from pymongo.server_api import ServerApi
-import motor 
+import motor.motor_asyncio
+from decouple import config
 
 
-uri = 'mongodb+srv://imusa4918:PpmoPhourizZiyDr@cluster0.trkisj2.mongodb.net/?retryWrites=true&w=majority'
-client = MongoClient(uri, server_api=ServerApi('1'))
-db = client["urlstore"]
+uri = config("MONGO_STRING")
 
+client = motor.motor_asyncio.AsyncIOMotorClient(uri)
+db = client.urls
 
 try:
-    client.admin.command('ping')
+    res = client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
