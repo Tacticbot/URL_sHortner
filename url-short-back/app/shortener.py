@@ -16,7 +16,7 @@ async def post_url(payload: LongUrl, request: Request):
     db = get_database()
     collection = get_url_collection(db)
 
-    check = collection.find_one({"short_code": short_code})
+    check = await collection.find_one({"short_url": short_code})
     if check:
         raise HTTPException(status_code = 400, detail = "Short code is invalid, It has been used.")
 
