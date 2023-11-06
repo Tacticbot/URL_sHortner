@@ -1,18 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, Header
 from starlette.responses import RedirectResponse
 from model import *
-from shortener import URL_DICT
+from database import get_url_collection, get_database
 from decouple import config
 
 router = APIRouter()
 
 @router.get("/{short_code}")
 async def redirect_url(short_code : str):
-    # collection = database.get_collection("urls")
-    # url_item = await collection.find_one({"short_url": short_url})
-    url_item = URL_DICT[short_code]
-    
-    if url_item:
-        return RedirectResponse(URL_DICT[short_code])
-    else:
-        raise HTTPException(status_code=404, detail="Short URL not found")
+    db =  get_database()
+    collection = get_url_collection(db)
+
+    url_data = await collection.find_one({"short_url": short_code})
+    if not url_data:
+        raise HTTPException(status_code= 401, detail="Short URL not found")
+
+    return RedirectResponse(url= url_data["long_url"])

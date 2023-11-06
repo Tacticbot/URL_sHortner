@@ -1,20 +1,26 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, Depends, HTTPException, Header, Request
 from decouple import config
 from model import *
-from database import *
+from database import get_database, get_url_collection
 
 
 router = APIRouter()
 
-URL_DICT = {}
 
-@router.post('/', response_model= dict)
-def post_url(url: LongUrlSchema):
+@router.post('/', response_model= UrlSchema)
+async def post_url(payload: LongUrl, request: Request):
     short_code = generate_short_url()
+    created_at = datetime.now().isoformat()
+    base_url = request.base_url
 
-    # item_id = len(URL_DICT) + 1
-    #[item_id]
-    URL_DICT[short_code] = url.longurl
-    return URL_DICT
+    db = get_database()
+    collection = get_url_collection(db)
 
+    check = collection.find_one({"short_code": short_code})
+    if check:
+        raise HTTPException(status_code = 400, detail = "Short code is invalid, It has been used.")
+
+    await collection.insert_one({"short_url": short_code, "long_url": str(payload.long_url), "created_at": created_at})
+    
+    return UrlSchema(short_url=f"{base_url}{short_code}", long_url=payload.long_url, created_at=created_at)
 

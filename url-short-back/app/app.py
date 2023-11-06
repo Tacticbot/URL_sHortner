@@ -4,19 +4,19 @@ from shortener import router as ShortRouter
 from redirect import router as RedirectRouter
 
 from contextlib import asynccontextmanager
-from database import *
+from database import get_database, shutdown_db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_db()
+    get_database()
     yield
-    await shutdown_db()
+    shutdown_db()
     
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(ShortRouter, tags=["Test"], prefix = "/api/shorten")
+app.include_router(ShortRouter, tags=["Shorten Long URL"], prefix = "/api/shorten")
 
 app.include_router(RedirectRouter, tags = ["Redirect to Short URL"])
 

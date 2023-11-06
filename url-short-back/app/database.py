@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 import motor.motor_asyncio
 from decouple import config
 
@@ -13,23 +12,12 @@ try:
 except Exception as e:
     print(e)
 
-async def create_db():
-    uri = config("MONGO_STRING")
+def get_database():
+    db = mongo_client["url_store"]
+    return db
 
-    mongo_client = motor.motor_asyncio.AsyncIOMotorClient(uri)
-    db = mongo_client["urlstore"]
+def get_url_collection(db):
+    return db["url_collection"]
 
-
-async def get_db():
-    uri = config("MONGO_STRING")
-
-    mongo_client = motor.motor_asyncio.AsyncIOMotorClient(uri)
-    db = mongo_client["urlstore"]
-    collection = db["url_collection"]
-    return collection
-    
-    
-
-async def shutdown_db():
+def shutdown_db():
     mongo_client.close()
-
