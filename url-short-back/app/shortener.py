@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Header, Request
+from fastapi import APIRouter, HTTPException,  Request
 from decouple import config
 from model import *
 from database import get_database, get_url_collection

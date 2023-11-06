@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, status, Request
+from fastapi import FastAPI, HTTPException,  status, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from shortener import router as ShortRouter
 from redirect import router as RedirectRouter

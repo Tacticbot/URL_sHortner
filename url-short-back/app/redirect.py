@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, HTTPException
 from starlette.responses import RedirectResponse
 from model import *
 from database import get_url_collection, get_database
